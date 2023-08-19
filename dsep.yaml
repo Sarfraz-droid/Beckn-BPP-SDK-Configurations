@@ -1,0 +1,89 @@
+path: <org-yaml-path>
+version: 1.1.0
+db:
+  mongo:
+    mongo_uri: <mongo_uri>
+    models:
+    - name: "Transaction"
+      schema:
+        txn_id:
+          type: string
+        order_id:
+          type: ObjectId
+          ref: Order
+          required: true
+        status:
+          type: string
+          default: "initiated"
+          enum:
+            - "initiated"
+            - "in_progress"
+            - "completed"
+            - "cancelled"
+            - "confirmed"
+tables:     
+  - name: "Mentors"
+    for: Provider
+    admin_ui: true
+    schema:
+      name:
+        type: string
+        as: descriptor.name
+      mentor_code:
+        type: uuid
+        as: descriptor.code
+      short_desc:
+        type: string
+        as: descriptor.short_desc
+      mentor_images:
+        type: object[]
+        as: descriptor.images
+        children:
+          icon:
+            type: upload
+            as: url
+      subject:
+        type: enum
+        as: category_id
+        enum:
+        - code: "MATHS"
+          name: "MATHS"
+        - code: "ENGLISH"
+          name: "ENGLISH"
+        - code: "PHYSICS"
+          name: "PHYSICS"
+        - code: "CHEMISTRY"
+          name: "CHEMISTRY"
+      packages:
+        type: object[]
+        as: items
+        children:
+          id:
+            type: uuid
+            as: id
+          name:
+            type: string
+            as: descriptor.name
+          short_desc:
+            type: string
+            as: descriptor.short_desc
+          price:
+            type: object
+            as: price
+            children:
+              value:
+                type: string
+                as: value
+
+gateway:
+    uri: <gateway_uri>
+    registry_uri: <registry_uri>
+app:
+    id: <id>
+    unique_id: <unique-id>
+    uri: <uri>
+    ttl: PT10M
+    city: std:080
+    country: IND
+    public_key: <public_key>
+    private_key: <private_key>

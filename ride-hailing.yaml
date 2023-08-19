@@ -1,0 +1,109 @@
+path: <org-yaml-path>
+version: 1.1.0
+db:
+  mongo:
+    mongo_uri: <mongo_uri>
+    models:
+    - name: "Transaction"
+      schema:
+        txn_id:
+          type: string
+        order_id:
+          type: ObjectId
+          ref: Order
+          required: true
+        status:
+          type: string
+          default: "initiated"
+          enum:
+            - "initiated"
+            - "in_progress"
+            - "completed"
+            - "cancelled"
+            - "confirmed"
+tables:     
+  - name: "Descriptor"
+    admin_ui: true
+    for: Descriptor
+    schema: 
+      title: 
+        type: string
+        as: name
+      description:
+        type: string
+        as: short_desc
+      code: 
+        type: string
+        as: code
+      images: 
+        type: object[]
+        as: images
+        children:
+          icon:
+            type: upload
+            as: url
+  - name: "User_Catalog"
+    for: Catalog
+    admin_ui: true
+    schema: 
+      descriptor:
+        type: ref
+        as: descriptor
+        $ref: Descriptor
+        $ref_key: name
+  - name: "Driver_Details"
+    for: Provider
+    admin_ui: true
+    schema:
+      driver_name:
+        type: string
+        as: descriptor.name
+      driver_code:
+        type: string
+        as: descriptor.code
+      driver_images:
+        type: object[]
+        as: descriptor.images
+        children:
+          icon:
+            type: upload
+            as: url
+      vehicle_category:
+        type: enum
+        as: category_id
+        enum:
+        - code: "MINI"
+          name: "MINI"
+        - code: "AUTO"
+          name: "AUTO"
+        - code: "MICRO"
+          name: "MICRO"
+        - code: "SEDAN"
+          name: "SEDAN"
+      packages:
+        type: object[]
+        as: items
+        children:
+          id:
+            type: string
+            as: id
+          price:
+            type: object
+            as: price
+            children:
+              value:
+                type: string
+                as: value
+
+gateway:
+    uri: <gateway_uri>
+    registry_uri: <registry_uri>
+app:
+    id: <id>
+    unique_id: <unique-id>
+    uri: <uri>
+    ttl: PT10M
+    city: std:080
+    country: IND
+    public_key: <public_key>
+    private_key: <private_key>
